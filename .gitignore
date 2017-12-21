@@ -1,7 +1,10 @@
 .*.swp
-demo
 DoxyDocs/*
 CMakeCache.txt
 CMakeFiles/*
 cmake*.cmake
 Makefile
+Testing/*
+
+demo
+timer_tests

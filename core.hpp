@@ -1,6 +1,5 @@
 /*
  *  Runtime timer classes
- *  RW Penney, December 2017
  */
 
 //  Copyright (C) 2017, RW Penney
@@ -20,7 +19,10 @@
 namespace rtimers {
 
 
-/** Mechanism for automatically starting and stopping a timer */
+/** Mechanism for automatically starting and stopping a timer
+ *
+ *  \see Timer
+ */
 template <typename TMR>
 class ScopedStartStop
 {
@@ -46,6 +48,8 @@ class ScopedStartStop
  *  can be customized.
  *
  *  It is assumed that all time-intervals are stored in units of seconds.
+ *
+ *  \see NullManager, SerialManager, MeanBoundStats, StderrLogger
  */
 template <typename MGR, typename LOG>
 class Timer : protected MGR
@@ -124,7 +128,10 @@ struct NullManager
 };
 
 
-/** Timer-statistics controller suitable for non-threaded code */
+/** Timer-statistics controller suitable for non-threaded code
+ *
+ *  \see C89clock, BoundStats
+ */
 template <typename CLK, typename STATS>
 struct SerialManager
 {
