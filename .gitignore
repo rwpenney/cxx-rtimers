@@ -1,0 +1,7 @@
+.*.swp
+demo
+DoxyDocs/*
+CMakeCache.txt
+CMakeFiles/*
+cmake*.cmake
+Makefile
