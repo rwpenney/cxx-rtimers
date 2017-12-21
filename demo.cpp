@@ -1,11 +1,11 @@
-#include "core.hpp"
+#include "chrono.hpp"
 
 using namespace rtimers;
 
 
 int main(int argc, char* argv[])
 {
-  typedef Timer<SerialManager<C89clock, VarBoundStats>,
+  typedef Timer<SerialManager<chrono::HiResClock, VarBoundStats>,
                 StderrLogger> BasicTimer;
   typedef Timer<NullManager, NullLogger> NullTimer;
 

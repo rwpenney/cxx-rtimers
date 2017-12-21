@@ -7,7 +7,7 @@ ENABLE_TESTING()
 
 
 IF(CMAKE_COMPILER_IS_GNUCC)
-    ADD_DEFINITIONS(-ansi -pedantic -Wall)
+    ADD_DEFINITIONS(-ansi -std=c++11 -pedantic -Wall)
     SET(CMAKE_CXX_FLAGS_DEBUG:STRING "-ggdb")
 ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
@@ -17,6 +17,7 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 
 SET(lib_hdrs
+    chrono.hpp
     core.hpp
 )
 
