@@ -205,7 +205,8 @@ struct BoundStats
   }
 };
 
-std::ostream& operator<<(std::ostream& os, const BoundStats& stats) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const BoundStats& stats) {
   const TimeUnit tu = stats.guessUnit(0.5 * (stats.tmin + stats.tmax));
 
   os << (stats.tmin * tu.mult) << tu.unit
@@ -232,7 +233,8 @@ struct MeanBoundStats : public BoundStats
   double mean;
 };
 
-std::ostream& operator<<(std::ostream& os, const MeanBoundStats& stats) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const MeanBoundStats& stats) {
   const TimeUnit tu = stats.guessUnit(stats.mean);
 
   os << "<t> = " << (stats.mean * tu.mult) << tu.unit << ", "
@@ -263,7 +265,8 @@ struct VarBoundStats : public BoundStats
   double nVariance;
 };
 
-std::ostream& operator<<(std::ostream& os, const VarBoundStats& stats) {
+inline std::ostream& operator<<(std::ostream& os,
+                                const VarBoundStats& stats) {
   const TimeUnit tu = stats.guessUnit(stats.mean);
 
   os << "<t> = " << (stats.mean * tu.mult) << tu.unit << ", "

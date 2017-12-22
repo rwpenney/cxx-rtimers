@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     }
   }
 
-  { cxx11::DefaultTimer tmr("auto");
+  { cxx11::ThreadedTimer tmr("auto");
 
     for (int i=0; i<2000; ++i) {
       auto sc = tmr.scopedStart();
