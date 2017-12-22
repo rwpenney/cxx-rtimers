@@ -12,7 +12,7 @@
 #include <boost/test/unit_test.hpp>
 #include <cmath>
 
-#include "core.hpp"
+#include "rtimers/core.hpp"
 
 namespace BoostUT = boost::unit_test;
 
@@ -20,12 +20,63 @@ namespace BoostUT = boost::unit_test;
 namespace rtimers {
   namespace testing {
 
+constexpr double Pi = 3.14159265358979323846;
+
+
+struct TestStartStop : BoostUT::test_suite
+{
+  typedef Timer<SerialManager<C89clock, BoundStats>, NullLogger> QuietTimer;
+
+  TestStartStop()
+    : BoostUT::test_suite("timer start/stop counting")
+  {
+    add(BOOST_TEST_CASE(plain));
+    add(BOOST_TEST_CASE(scoped));
+  }
+
+  static void plain() {
+    QuietTimer tmr("basic");
+    const unsigned count = 7831;
+
+    for (unsigned i=0; i<count; ++i) {
+      tmr.start();
+      tmr.stop();
+    }
+
+    BOOST_CHECK_EQUAL(tmr.getStats().count, count);
+  }
+
+  static void scoped() {
+    QuietTimer tmr("basic");
+    const unsigned count = 1384;
+
+    for (unsigned i=0; i<count; ++i) {
+      QuietTimer::Scoper sc = tmr.scopedStart();
+    }
+
+    BOOST_CHECK_EQUAL(tmr.getStats().count, count);
+  }
+};
+
+
+/** Inject sequence of samples with well-known mean and variance */
+template <typename STATS>
+void pushSineSamples(STATS& stats, unsigned count, double offset, double amp)
+{
+  for (unsigned i=0; i<count; ++i) {
+    const double x = i / (double)count;
+    stats.addSample(offset + amp * std::sin(8 * Pi * x));
+  }
+}
+
+
 struct TestVarianceStats : BoostUT::test_suite
 {
   TestVarianceStats()
     : BoostUT::test_suite("resursive mean/variance computation")
   {
     add(BOOST_TEST_CASE(simple));
+    add(BOOST_TEST_CASE(sine));
   }
 
   static void simple() {
@@ -47,6 +98,24 @@ struct TestVarianceStats : BoostUT::test_suite
     BOOST_CHECK_CLOSE(stats.nVariance, 2 * (0.25 + 2.25), eps);
     BOOST_CHECK_CLOSE(stats.getStddev(), std::sqrt((0.25 + 2.25) / 2), eps);
   }
+
+  static void sine() {
+    VarBoundStats stats;
+    const double mean = 16.5, amp = 2.3, eps = 1e-3;
+    const unsigned count = 10000;
+
+    pushSineSamples(stats, count, mean, amp);
+
+    BOOST_CHECK_EQUAL(stats.count, count);
+
+    BOOST_CHECK_CLOSE(stats.tmin, mean - amp, eps);
+    BOOST_CHECK_CLOSE(stats.tmax, mean + amp, eps);
+
+    BOOST_CHECK_CLOSE(stats.mean, mean, eps);
+
+    BOOST_CHECK_CLOSE(stats.nVariance, count * 0.5 * amp * amp, eps);
+    BOOST_CHECK_CLOSE(stats.getStddev(), std::sqrt(0.5) * amp, eps);
+  }
 };
 
 
@@ -55,6 +124,7 @@ struct RTtestSuite : BoostUT::test_suite
   RTtestSuite()
     : BoostUT::test_suite("runtime timer tests")
   {
+    add(new TestStartStop);
     add(new TestVarianceStats);
   }
 };

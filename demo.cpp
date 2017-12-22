@@ -1,15 +1,21 @@
-#include "chrono.hpp"
+#include <rtimers/cxx11.hpp>
 
 using namespace rtimers;
 
 
+void expensiveFunction() {
+    static rtimers::cxx11::DefaultTimer timer("expensive");
+    auto scopedStartStop = timer.scopedStart();
+}
+
+
 int main(int argc, char* argv[])
 {
-  typedef Timer<SerialManager<chrono::HiResClock, VarBoundStats>,
-                StderrLogger> BasicTimer;
-  typedef Timer<NullManager, NullLogger> NullTimer;
+  for (int i=0; i<731; ++i) {
+    expensiveFunction();
+  }
 
-  { BasicTimer tmr("bare");
+  { cxx11::DefaultTimer tmr("bare");
 
     for (int i=0; i<10; ++i) {
       tmr.start();
@@ -17,10 +23,10 @@ int main(int argc, char* argv[])
     }
   }
 
-  { BasicTimer tmr("auto");
+  { cxx11::DefaultTimer tmr("auto");
 
     for (int i=0; i<2000; ++i) {
-      BasicTimer::Scoper sc = tmr.scopedStart();
+      auto sc = tmr.scopedStart();
       // Do heavy computation...
     }
   }

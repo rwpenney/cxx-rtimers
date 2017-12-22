@@ -2,8 +2,8 @@
  *  Timer classes using C++11 std::chrono
  */
 
-#ifndef _RTIMERS_CHRONO_HPP
-#define _RTIMERS_CHRONO_HPP
+#ifndef _RTIMERS_CXX11_HPP
+#define _RTIMERS_CXX11_HPP
 
 #include <chrono>
 
@@ -11,7 +11,7 @@
 
 
 namespace rtimers {
-  namespace chrono {
+  namespace cxx11 {
 
 /** System clock offering highest available time resolution */
 struct HiResClock
@@ -29,8 +29,12 @@ struct HiResClock
   }
 };
 
-  }   // namespace chrono
+
+using DefaultTimer = Timer<SerialManager<HiResClock, VarBoundStats>,
+                           StderrLogger>;
+
+  }   // namespace cxx11
 }   // namespace rtimers
 
 
-#endif  /* !_RTIMERS_CHRONO_HPP */
+#endif  /* !_RTIMERS_CXX11_HPP */

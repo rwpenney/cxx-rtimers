@@ -17,9 +17,11 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 
 SET(lib_hdrs
-    chrono.hpp
-    core.hpp
+    rtimers/core.hpp
+    rtimers/cxx11.hpp
 )
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 INSTALL(FILES ${lib_hdrs} DESTINATION include/rtimers)

@@ -56,6 +56,7 @@ class Timer : protected MGR
 {
   public:
     typedef typename MGR::Instant Instant;
+    typedef typename MGR::StatsAccumulator Stats;
     typedef Timer<MGR, LOG> self_t;
     typedef ScopedStartStop<self_t> Scoper;
 
@@ -79,6 +80,11 @@ class Timer : protected MGR
     //! Create object which will start & stop the clock when in scope
     Scoper scopedStart() {
       return Scoper(*this);
+    }
+
+    //! Get current time-interval statistics (not thread safe)
+    const Stats& getStats() const {
+      return stats;
     }
 
   protected:
@@ -269,6 +275,10 @@ class StreamLogger
     static std::ostream& stream;
 };
 
+
+typedef Timer<NullManager, NullLogger> NullTimer;
+typedef Timer<SerialManager<C89clock, MeanBoundStats>,
+              StderrLogger> BasicTimer;
 
 }   // namespace rtimers
 
