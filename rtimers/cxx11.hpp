@@ -20,6 +20,7 @@
 namespace rtimers {
   namespace cxx11 {
 
+
 /** System clock offering highest available time resolution */
 struct HiResClock
 {
@@ -69,7 +70,7 @@ class ThreadManager
 
     //! Note the time the stopwatch was stopped, and accumulate statistics
     void updateStats(const Instant& now, STATS& stats) {
-      const double duration = CLK::interval(startTimes[this], now);
+      const double duration = CLK::interval(startTimes.at(this), now);
 
       {
         std::lock_guard<std::mutex> lock(stats_mtx);
@@ -93,6 +94,7 @@ using DefaultTimer = Timer<SerialManager<HiResClock, VarBoundStats>,
                            StderrLogger>;
 using ThreadedTimer = Timer<ThreadManager<HiResClock, VarBoundStats>,
                            StderrLogger>;
+
 
   }   // namespace cxx11
 }   // namespace rtimers
