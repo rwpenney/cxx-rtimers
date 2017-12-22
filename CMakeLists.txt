@@ -5,6 +5,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 PROJECT(rtimers)
 ENABLE_TESTING()
 
+FIND_PACKAGE(Threads)
 
 IF(CMAKE_COMPILER_IS_GNUCC)
     ADD_DEFINITIONS(-ansi -std=c++11 -pedantic -Wall)
@@ -28,11 +29,13 @@ INSTALL(FILES ${lib_hdrs} DESTINATION include/rtimers)
 
 ADD_EXECUTABLE(demo ${lib_hdrs} demo.cpp)
 
+
 IF(Boost_FOUND)
-    ADD_EXECUTABLE(timer_tests ${lib_hdrs} testmain.cpp)
+    ADD_EXECUTABLE(timer_tests ${lib_hdrs} testdefns.hpp
+                   testcxx11.cpp testmain.cpp)
     SET_TARGET_PROPERTIES(timer_tests
         PROPERTIES
             COMPILE_FLAGS "-DUNIT_TESTING -DBOOST_TEST_DYN_LINK")
-    TARGET_LINK_LIBRARIES(timer_tests ${Boost_LIBRARIES})
+    TARGET_LINK_LIBRARIES(timer_tests ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
     ADD_TEST(TT timer_tests)
 ENDIF(Boost_FOUND)

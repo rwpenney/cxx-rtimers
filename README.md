@@ -11,7 +11,7 @@ Features:
 * Header only
 * Templated to allow customization of clock source, timing statistics, etc.
 * C++03 and C++11 support
-* Scoped-based or manual starting/stopping
+* Scope-based or manual starting/stopping
 * Thread-safe and serial options
 * Numerically stable calculation of mean & standard-deviation
 * Automatic scaling to nanosecond/microsecond/minute/etc. units
@@ -25,6 +25,7 @@ Features:
 void expensiveFunction() {
     static rtimers::cxx11::DefaultTimer timer("expensive");
     auto scopedStartStop = timer.scopedStart();
+    // Do something costly...
 }
 ```
 

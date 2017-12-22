@@ -13,14 +13,13 @@
 #include <cmath>
 
 #include "rtimers/core.hpp"
+#include "testdefns.hpp"
 
 namespace BoostUT = boost::unit_test;
 
 
 namespace rtimers {
   namespace testing {
-
-constexpr double Pi = 3.14159265358979323846;
 
 
 struct TestStartStop : BoostUT::test_suite
@@ -126,6 +125,8 @@ struct RTtestSuite : BoostUT::test_suite
   {
     add(new TestStartStop);
     add(new TestVarianceStats);
+
+    add(new TestCxx11);
   }
 };
 
