@@ -161,6 +161,15 @@ struct SerialManager
 };
 
 
+struct TimeUnit {
+  TimeUnit(const std::string& u, double m)
+    : unit(u), mult(1.0 / m) {}
+
+  const std::string unit;   //!< The time unit (e.g. "us", "s")
+  const double mult;        //!< Multiplier to convert from seconds
+};
+
+
 /** Accumulate simple min/max statistics of time intervals */
 struct BoundStats
 {
@@ -176,10 +185,32 @@ struct BoundStats
   unsigned long count;
   double tmin;
   double tmax;
+
+  static TimeUnit guessUnit(double tscale) {
+    if (tscale == 0.0) {
+      return TimeUnit("s", 1.0);
+    } else if (tscale < 250e-9) {
+      return TimeUnit("ns", 1e-9);
+    } else if (tscale < 250e-6) {
+      return TimeUnit("us", 1e-6);
+    } else if (tscale < 250e-3) {
+      return TimeUnit("ms", 1e-3);
+    } else if (tscale < 400) {
+      return TimeUnit("s", 1.0);
+    } else if (tscale < 7500) {
+      return TimeUnit("m", 60.0);
+    } else {
+      return TimeUnit("h", 3600.0);
+    }
+  }
 };
 
 std::ostream& operator<<(std::ostream& os, const BoundStats& stats) {
-  os << stats.tmin << " <= t <= " << stats.tmax
+  const TimeUnit tu = stats.guessUnit(0.5 * (stats.tmin + stats.tmax));
+
+  os << (stats.tmin * tu.mult) << tu.unit
+     << " <= t <= "
+     << (stats.tmax * tu.mult) << tu.unit
      << " (n=" << stats.count << ")";
   return os;
 }
@@ -202,7 +233,9 @@ struct MeanBoundStats : public BoundStats
 };
 
 std::ostream& operator<<(std::ostream& os, const MeanBoundStats& stats) {
-  os << "<t> = " << stats.mean << ", "
+  const TimeUnit tu = stats.guessUnit(stats.mean);
+
+  os << "<t> = " << (stats.mean * tu.mult) << tu.unit << ", "
      << static_cast<BoundStats>(stats);
   return os;
 }
@@ -231,8 +264,10 @@ struct VarBoundStats : public BoundStats
 };
 
 std::ostream& operator<<(std::ostream& os, const VarBoundStats& stats) {
-  os << "<t> = " << stats.mean << ", "
-     << "std = " << stats.getStddev() << ", "
+  const TimeUnit tu = stats.guessUnit(stats.mean);
+
+  os << "<t> = " << (stats.mean * tu.mult) << tu.unit << ", "
+     << "std = " << (stats.getStddev() * tu.mult) << tu.unit << ", "
      << static_cast<BoundStats>(stats);
   return os;
 }

@@ -1,11 +1,12 @@
+#include <iomanip>
 #include <rtimers/cxx11.hpp>
 
 using namespace rtimers;
 
 
 void expensiveFunction() {
-    static rtimers::cxx11::DefaultTimer timer("expensive");
-    auto scopedStartStop = timer.scopedStart();
+  static rtimers::cxx11::DefaultTimer timer("expensive");
+  auto scopedStartStop = timer.scopedStart();
 }
 
 
@@ -38,6 +39,9 @@ int main(int argc, char* argv[])
       tmr.stop();
     }
   }
+
+  // Prepare number formatting for timer output on program exit:
+  std::cerr << std::fixed << std::setprecision(3);
 
   return 0;
 }
