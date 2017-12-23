@@ -18,10 +18,15 @@
 
 namespace rtimers {
 
+struct BoundStats;
+struct MeanBoundStats;
+struct TimeUnit;
+struct VarBoundStats;
+
 
 /** Mechanism for automatically starting and stopping a timer
  *
- *  \see Timer
+ *  \see Timer::scopedStart()
  */
 template <typename TMR>
 class ScopedStartStop
@@ -85,6 +90,20 @@ class Timer : protected MGR
     //! Get current time-interval statistics (not thread safe)
     const Stats& getStats() const {
       return stats;
+    }
+
+    //! Estimate time delay between adjacent queries of system clock
+    template <typename STATS=MeanBoundStats>
+    static STATS zeroError(unsigned iterations=1000) {
+      STATS zeros;
+
+      for (unsigned i=0; i<iterations; ++i) {
+        const Instant t0 = MGR::ClockProvider::now();
+        const Instant t1 = MGR::ClockProvider::now();
+        zeros.addSample(MGR::ClockProvider::interval(t0, t1));
+      }
+
+      return zeros;
     }
 
   protected:

@@ -29,6 +29,7 @@ struct TestCxx11 : boost::unit_test::test_suite
 {
   TestCxx11();
 
+  static void serial();
   static void threaded();
 };
 

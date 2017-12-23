@@ -1,17 +1,28 @@
+#include <cmath>
 #include <iomanip>
 #include <rtimers/cxx11.hpp>
 
 using namespace rtimers;
 
 
-void expensiveFunction() {
+double expensiveFunction() {
   static rtimers::cxx11::DefaultTimer timer("expensive");
   auto scopedStartStop = timer.scopedStart();
+  double result = 0.0;
+
+  for (int i=0; i<100; ++i) {
+    result += std::cos(0.2 * i + 0.1);
+  }
+
+  return result;
 }
 
 
 int main(int argc, char* argv[])
 {
+  std::cout << "Zero error: "
+            << cxx11::DefaultTimer::zeroError<MeanBoundStats>() << std::endl;
+
   for (int i=0; i<731; ++i) {
     expensiveFunction();
   }
