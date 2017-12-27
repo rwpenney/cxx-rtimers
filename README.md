@@ -10,7 +10,7 @@ after the timer goes out of scope.
 Features:
 * Header only
 * Templated to allow customization of clock source, timing statistics, etc.
-* C++03 and C++11 support
+* C++03 and C++11 (std::chrono) support
 * Scope-based or manual starting/stopping
 * Thread-safe and serial options
 * Numerically stable calculation of mean & standard-deviation statistics

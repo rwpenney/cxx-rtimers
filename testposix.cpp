@@ -43,9 +43,9 @@ static void* keepBusy(void* arg)
   double tot = 0.0;
 
   for (unsigned n=0; n<params->iterations; ++n) {
-    auto scoper = params->timer->scopedStart();
-
+    params->timer->start();
     tot += std::cos((n * 252 + 23) % 41);
+    params->timer->stop();
   }
 
   return NULL;

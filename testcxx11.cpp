@@ -15,7 +15,9 @@
 
 #if RTIMERS_HAVE_CXX11
 #  include <memory>
+#  include <random>
 #  include <thread>
+#  include <vector>
 #  include "rtimers/cxx11.hpp"
 #endif
 
@@ -89,13 +91,30 @@ void TestCxx11::serial()
 void TestCxx11::threaded()
 {
 #if RTIMERS_HAVE_CXX11
-  QuietThreadedTimer tmr("C++11 threads");
-  std::list<std::unique_ptr<std::thread>> threads;
-  const unsigned nthreads = 200;
+  std::vector<std::unique_ptr<std::thread>> threads;
+  std::vector<unsigned> expected;
+  std::vector<std::unique_ptr<QuietThreadedTimer>> timers;
+  std::ranlux24_base randeng;
+  std::uniform_int_distribution<unsigned> uniformdist(200, 50000);
+  const unsigned ntimers = 7, nthreads = 200;
+
+  for (unsigned i=0; i<ntimers; ++i) {
+    std::stringstream ident;
+    ident << "C++11 threads [" << i << "]";
+
+    timers.push_back(std::unique_ptr<QuietThreadedTimer>(
+                            new QuietThreadedTimer(ident.str())));
+    expected.push_back(0);
+  }
 
   for (unsigned i=0; i<nthreads; ++i) {
-    threads.push_back(
-          std::unique_ptr<std::thread>(new std::thread(keepBusy, &tmr, i)));
+    unsigned slot = i % ntimers;
+    QuietThreadedTimer *tmr = timers[slot].get();
+    unsigned iterations = uniformdist(randeng);
+
+    threads.push_back(std::unique_ptr<std::thread>(
+                            new std::thread(keepBusy, tmr, iterations)));
+    expected[slot] += iterations;
   }
 
   while (!threads.empty()) {
@@ -103,7 +122,9 @@ void TestCxx11::threaded()
     threads.pop_back();
   }
 
-  BOOST_CHECK_EQUAL(tmr.getStats().count, (nthreads * (nthreads - 1)) / 2);
+  for (unsigned i=0; i<ntimers; ++i) {
+    BOOST_CHECK_EQUAL(expected[i], timers[i]->getStats().count);
+  }
 #else // !RTIMERS_HAVE_CXX11
   BOOST_ERROR("No C++11 multi-thread support");
 #endif  // RTIMERS_HAVE_CXX11

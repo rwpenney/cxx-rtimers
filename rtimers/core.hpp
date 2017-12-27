@@ -24,6 +24,21 @@ struct TimeUnit;
 struct VarBoundStats;
 
 
+//! Estimate time delay between adjacent queries of system clock
+template <typename CLK, typename STATS=MeanBoundStats>
+STATS clockZeroError(unsigned iterations=1000) {
+  STATS zeros;
+
+  for (unsigned i=0; i<iterations; ++i) {
+    const typename CLK::Instant t0 = CLK::now();
+    const typename CLK::Instant t1 = CLK::now();
+    zeros.addSample(CLK::interval(t0, t1));
+  }
+
+  return zeros;
+}
+
+
 /** Mechanism for automatically starting and stopping a timer
  *
  *  \see Timer::scopedStart()
@@ -95,15 +110,7 @@ class Timer : protected MGR
     //! Estimate time delay between adjacent queries of system clock
     template <typename STATS=MeanBoundStats>
     static STATS zeroError(unsigned iterations=1000) {
-      STATS zeros;
-
-      for (unsigned i=0; i<iterations; ++i) {
-        const Instant t0 = MGR::ClockProvider::now();
-        const Instant t1 = MGR::ClockProvider::now();
-        zeros.addSample(MGR::ClockProvider::interval(t0, t1));
-      }
-
-      return zeros;
+      return clockZeroError<typename MGR::ClockProvider, STATS>(iterations);
     }
 
   protected:

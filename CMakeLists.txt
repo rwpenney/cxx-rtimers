@@ -14,10 +14,14 @@ ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
 
 FIND_PACKAGE(Boost 1.48 COMPONENTS system unit_test_framework)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+IF(Boost_FOUND)
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+    ADD_DEFINITIONS(-DRTIMERS_HAVE_BOOST=1)
+ENDIF(Boost_FOUND)
 
 
 SET(lib_hdrs
+    rtimers/boost.hpp
     rtimers/core.hpp
     rtimers/cxx11.hpp
     rtimers/posix.hpp
