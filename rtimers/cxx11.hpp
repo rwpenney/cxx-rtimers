@@ -11,16 +11,15 @@
 #ifndef _RTIMERS_CXX11_HPP
 #define _RTIMERS_CXX11_HPP
 
+#if __cplusplus < 201100
+#  error "rtimers/cxx11 requires C++11 support"
+#endif
+
 #include <chrono>
 #include <map>
 #include <mutex>
 
 #include "core.hpp"
-
-
-#if __cplusplus < 201100
-#  error "rtimers/cxx11 requires C++11 support"
-#endif
 
 
 namespace rtimers {
@@ -104,6 +103,5 @@ using ThreadedTimer = Timer<ThreadManager<HiResClock, VarBoundStats>,
 
   }   // namespace cxx11
 }   // namespace rtimers
-
 
 #endif  /* !_RTIMERS_CXX11_HPP */

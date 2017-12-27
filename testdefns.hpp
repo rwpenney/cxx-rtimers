@@ -18,6 +18,12 @@
 #  define RTIMERS_HAVE_CXX11 0
 #endif
 
+#if defined(__unix) || defined(__linux)
+#  define RTIMERS_HAVE_POSIX 1
+#else
+#  define RTIMERS_HAVE_POSIX 0
+#endif
+
 
 namespace rtimers {
   namespace testing {
@@ -28,6 +34,15 @@ constexpr double Pi = 3.14159265358979323846;
 struct TestCxx11 : boost::unit_test::test_suite
 {
   TestCxx11();
+
+  static void serial();
+  static void threaded();
+};
+
+
+struct TestPosix : boost::unit_test::test_suite
+{
+  TestPosix();
 
   static void serial();
   static void threaded();

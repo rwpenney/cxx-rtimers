@@ -20,6 +20,7 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 SET(lib_hdrs
     rtimers/core.hpp
     rtimers/cxx11.hpp
+    rtimers/posix.hpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,10 +33,11 @@ ADD_EXECUTABLE(demo ${lib_hdrs} demo.cpp)
 
 IF(Boost_FOUND)
     ADD_EXECUTABLE(timer_tests ${lib_hdrs} testdefns.hpp
-                   testcxx11.cpp testmain.cpp)
+                   testcxx11.cpp testmain.cpp testposix.cpp)
     SET_TARGET_PROPERTIES(timer_tests
         PROPERTIES
             COMPILE_FLAGS "-DUNIT_TESTING -DBOOST_TEST_DYN_LINK")
-    TARGET_LINK_LIBRARIES(timer_tests ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+    TARGET_LINK_LIBRARIES(timer_tests ${Boost_LIBRARIES}
+                          ${CMAKE_THREAD_LIBS_INIT})
     ADD_TEST(TT timer_tests)
 ENDIF(Boost_FOUND)

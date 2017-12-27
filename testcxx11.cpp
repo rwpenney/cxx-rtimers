@@ -13,7 +13,7 @@
 
 #include "testdefns.hpp"
 
-#if __cplusplus >= 201100
+#if RTIMERS_HAVE_CXX11
 #  include <memory>
 #  include <thread>
 #  include "rtimers/cxx11.hpp"

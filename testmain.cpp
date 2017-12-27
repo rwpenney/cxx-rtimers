@@ -127,6 +127,7 @@ struct RTtestSuite : BoostUT::test_suite
     add(new TestVarianceStats);
 
     add(new TestCxx11);
+    add(new TestPosix);
   }
 };
 
