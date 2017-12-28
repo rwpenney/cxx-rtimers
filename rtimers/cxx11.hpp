@@ -59,11 +59,15 @@ class ThreadManager
     using StatsAccumulator = STATS;
     using Instant = typename CLK::Instant;
     using self_t = ThreadManager<CLK, STATS>;
+    using TimeMap = std::map<self_t*, Instant>;
+
+    ThreadManager() = default;
+    ThreadManager(const ThreadManager&) = delete;
+    ThreadManager& operator=(const ThreadManager&) = delete;
+    ~ThreadManager() = default;
 
     //! Make a note of the time at which the stopwatch was started
     void recordStart(const Instant& dummy) {
-      std::lock_guard<std::mutex> lock(time_mtx);
-
       // Insert dummy start-time, which may be slow because this
       // involves a map lookup based on an instance address:
       startTimes[this] = dummy;
@@ -87,7 +91,7 @@ class ThreadManager
     //! Most recent start times
     thread_local static std::map<self_t*, Instant> startTimes;
 
-    std::mutex time_mtx, stats_mtx;
+    std::mutex stats_mtx;
 };
 
 template <typename CLK, typename STATS>

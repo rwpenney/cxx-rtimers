@@ -15,6 +15,7 @@
 
 #if RTIMERS_HAVE_POSIX
 #  include <pthread.h>
+#  include <vector>
 #  include "rtimers/posix.hpp"
 #endif
 
@@ -40,13 +41,8 @@ struct BusyParams {
 
 static void* keepBusy(void* arg)
 { BusyParams* params = static_cast<BusyParams*>(arg);
-  double tot = 0.0;
 
-  for (unsigned n=0; n<params->iterations; ++n) {
-    params->timer->start();
-    tot += std::cos((n * 252 + 23) % 41);
-    params->timer->stop();
-  }
+  (void)occupyTimer(*params->timer, params->iterations);
 
   return NULL;
 }
@@ -91,7 +87,7 @@ void TestPosix::threaded()
 {
 #if RTIMERS_HAVE_POSIX
   QuietThreadedTimer tmr("POSIX threads");
-  std::list<pthread_t> threads;
+  std::vector<pthread_t> threads;
   std::vector<BusyParams*> params;
   const unsigned nthreads = 200;
 

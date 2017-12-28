@@ -11,6 +11,7 @@
 #pragma once
 
 #include <boost/test/unit_test.hpp>
+#include "rtimers/core.hpp"
 
 #if __cplusplus >= 201100
 #  define RTIMERS_HAVE_CXX11 1
@@ -29,6 +30,20 @@ namespace rtimers {
   namespace testing {
 
 constexpr double Pi = 3.14159265358979323846;
+
+//! Consume some CPU time, starting and stopping timer a fixed number of times
+template <typename TMR>
+double occupyTimer(TMR& timer, unsigned iterations) {
+  double tot = 0.0;
+
+  for (unsigned n=0; n<iterations; ++n) {
+    typename TMR::Scoper scoper = timer.scopedStart();
+
+    tot += std::cos((n * 252 + 23) % 59);
+  }
+
+  return tot;
+}
 
 
 struct TestCxx11 : boost::unit_test::test_suite

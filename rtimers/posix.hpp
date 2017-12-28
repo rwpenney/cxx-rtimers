@@ -65,8 +65,6 @@ class ThreadManager
     }
 
     void recordStart(const Instant& dummy) {
-      pthread_mutex_lock(&stats_mtx);
-
       TimeMap* startTimes = static_cast<TimeMap*>(
                                               pthread_getspecific(start_key));
       if (startTimes == NULL) {
@@ -75,19 +73,16 @@ class ThreadManager
       }
       (*startTimes)[this] = dummy;
 
-      pthread_mutex_unlock(&stats_mtx);
-
       const typename TimeMap::const_iterator itr = startTimes->find(this);
       startTimes->insert(itr, typename TimeMap::value_type(this, CLK::now()));
     }
 
     void updateStats(const Instant& now, STATS& stats) {
-      pthread_mutex_lock(&stats_mtx);
-
       TimeMap* startTimes = static_cast<TimeMap*>(
                                               pthread_getspecific(start_key));
       const double duration = CLK::interval((*startTimes)[this], now);
 
+      pthread_mutex_lock(&stats_mtx);
       stats.addSample(duration);
       pthread_mutex_unlock(&stats_mtx);
     }
@@ -106,6 +101,10 @@ class ThreadManager
     static void tmapDelete(void* tm) {
       delete static_cast<TimeMap*>(tm);
     }
+
+  private:
+    ThreadManager(const ThreadManager&);
+    ThreadManager& operator=(const ThreadManager&);
 };
 
 template <typename CLK, typename STATS>

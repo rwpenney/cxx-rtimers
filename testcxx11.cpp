@@ -37,13 +37,8 @@ using QuietThreadedTimer = Timer<cxx11::ThreadManager<cxx11::HiResClock,
                                  NullLogger>;
 
 static void keepBusy(QuietThreadedTimer* timer, unsigned iterations)
-{ double tot = 0.0;
-
-  for (unsigned n=0; n<iterations; ++n) {
-    auto scoper = timer->scopedStart();
-
-    tot += std::cos((n * 252 + 23) % 41);
-  }
+{
+  occupyTimer(*timer, iterations);
 }
 
 #endif  // RTIMERS_HAVE_CXX11
