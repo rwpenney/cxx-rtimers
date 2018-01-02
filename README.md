@@ -43,11 +43,19 @@ On POSIX systems with older versions of C++, one could use:
 #include <rtimers/posix.hpp>
 rtimers::posix::DefaultTimer timer("bottleneck");
 ```
+Or for systems on which the [Boost](http://www.boost.org/)
+libraries are available, including
+the [boost::posix_time](http://www.boost.org/doc/libs/1_66_0/doc/html/date_time/posix_time.html) datastructures:
+```cpp
+#include <rtimers/boost.hpp>
+rtimers::boostpt::DefaultTimer timer("bottleneck");
+```
 
 For multi-threaded code, one can use the following timer classes:
 ```cpp
 rtimers::cxx11::ThreadedTimer
 rtimers::posix::ThreadedTimer
+rtimers::boostpt::ThreadedTimer
 ```
 
 More specialized timers can be built by combining components

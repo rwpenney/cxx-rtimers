@@ -13,7 +13,7 @@ IF(CMAKE_COMPILER_IS_GNUCC)
 ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
 
-FIND_PACKAGE(Boost 1.48 COMPONENTS system unit_test_framework)
+FIND_PACKAGE(Boost 1.48 COMPONENTS system thread unit_test_framework)
 IF(Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
     ADD_DEFINITIONS(-DRTIMERS_HAVE_BOOST=1)
@@ -27,17 +27,24 @@ SET(lib_hdrs
     rtimers/posix.hpp
 )
 
+SET(test_srcs
+    testboost.cpp
+    testcxx11.cpp
+    testmain.cpp
+    testposix.cpp
+)
+
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 INSTALL(FILES ${lib_hdrs} DESTINATION include/rtimers)
 
 ADD_EXECUTABLE(demo ${lib_hdrs} demo.cpp)
+TARGET_LINK_LIBRARIES(demo ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 
 IF(Boost_FOUND)
-    ADD_EXECUTABLE(timer_tests ${lib_hdrs} testdefns.hpp
-                   testcxx11.cpp testmain.cpp testposix.cpp)
+    ADD_EXECUTABLE(timer_tests ${lib_hdrs} testdefns.hpp ${test_srcs})
     SET_TARGET_PROPERTIES(timer_tests
         PROPERTIES
             COMPILE_FLAGS "-DUNIT_TESTING -DBOOST_TEST_DYN_LINK")

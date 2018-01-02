@@ -2,7 +2,7 @@
  *  Unit-tests for run-time timer mechanisms
  */
 
-//  Copyright (C) 2017, RW Penney
+//  Copyright (C) 2017-2018, RW Penney
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -126,6 +126,7 @@ struct RTtestSuite : BoostUT::test_suite
     add(new TestStartStop);
     add(new TestVarianceStats);
 
+    add(new TestBoost);
     add(new TestCxx11);
     add(new TestPosix);
   }

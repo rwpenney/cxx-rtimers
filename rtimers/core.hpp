@@ -2,7 +2,7 @@
  *  Runtime timer classes
  */
 
-//  Copyright (C) 2017, RW Penney
+//  Copyright (C) 2017-2018, RW Penney
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ struct TimeUnit;
 struct VarBoundStats;
 
 
-//! Estimate time delay between adjacent queries of system clock
+//! Estimate the time delay between adjacent queries of system clock
 template <typename CLK, typename STATS=MeanBoundStats>
 STATS clockZeroError(unsigned iterations=1000) {
   STATS zeros;
@@ -69,7 +69,7 @@ class ScopedStartStop
  *
  *  It is assumed that all time-intervals are stored in units of seconds.
  *
- *  \see NullManager, SerialManager, MeanBoundStats, StderrLogger
+ *  \see NullManager, SerialManager, StderrLogger
  */
 template <typename MGR, typename LOG>
 class Timer : protected MGR
@@ -125,6 +125,8 @@ class Timer : protected MGR
 /** Low-precision wallclock time, using std::time()
  *
  *  This offers a resolution of one second.
+ *
+ *  \see cxx11::HiResClock.
  */
 struct C89clock {
   typedef time_t Instant;
@@ -145,6 +147,8 @@ struct C89clock {
  *  and pays no attention to the system clock.
  *  It is intended to allow removal of timing functions,
  *  without changes to client code other than a simple typedef.
+ *
+ *  \see NullTimer.
  */
 struct NullManager
 {
