@@ -62,7 +62,7 @@ class ScopedStartStop
 
 /** Gather statistics from run-time stopwatch
  *
- *  This contains the core mechanisms for starting a stopping
+ *  This contains the core mechanisms for starting and stopping
  *  a timer. It is templated so that the management of
  *  thread-locking, statistics gathering and reporting
  *  can be customized.
@@ -107,8 +107,11 @@ class Timer : protected MGR
       return stats;
     }
 
-    //! Estimate time delay between adjacent queries of system clock
-    template <typename STATS=MeanBoundStats>
+    /*! Estimate time delay between adjacent queries of system clock
+     *
+     *  \see MeanBoundStats
+     */
+    template <typename STATS>
     static STATS zeroError(unsigned iterations=1000) {
       return clockZeroError<typename MGR::ClockProvider, STATS>(iterations);
     }

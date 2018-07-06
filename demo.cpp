@@ -1,3 +1,8 @@
+/*
+ *  Examples of C++ stopwatch classes, based around
+ *    https://github.com/rwpenney/cxx-rtimers/tree/master/rtimers
+ *  NOTE: this application requires a compiler with C++11 support (or later)
+ */
 #include <cmath>
 #include <iomanip>
 #include <rtimers/cxx11.hpp>

@@ -72,7 +72,7 @@ void TestCxx11::serial()
   BOOST_CHECK_GT(stats.mean, 50e-9);
   BOOST_CHECK_LT(stats.tmax, 1.0);
 
-  auto zeros = tmr.zeroError();
+  auto zeros = tmr.zeroError<MeanBoundStats>();
 
   BOOST_CHECK_GT(zeros.mean, 1e-9);
   BOOST_CHECK_LT(zeros.tmax, 0.1);
