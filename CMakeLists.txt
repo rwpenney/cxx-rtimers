@@ -1,7 +1,7 @@
 # CMake control-file for run-time timer classes
 # RW Penney, December 2017
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(rtimers)
 ENABLE_TESTING()
 
@@ -12,8 +12,7 @@ IF(CMAKE_COMPILER_IS_GNUCC)
     SET(CMAKE_CXX_FLAGS_DEBUG:STRING "-ggdb")
 ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
-
-FIND_PACKAGE(Boost 1.48 COMPONENTS system thread unit_test_framework)
+FIND_PACKAGE(Boost 1.60 COMPONENTS system thread unit_test_framework)
 IF(Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
     ADD_DEFINITIONS(-DRTIMERS_HAVE_BOOST=1)

@@ -2,7 +2,7 @@
  *  Timer classes using boost::posix_time
  */
 
-//  Copyright (C) 2017-2018, RW Penney
+//  (C)Copyright 2017-2021, RW Penney
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@
 #ifndef _RTIMERS_BOOST_HPP
 #define _RTIMERS_BOOST_HPP
 
+#include <boost/core/noncopyable.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/date_time/posix_time/posix_time_duration.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
