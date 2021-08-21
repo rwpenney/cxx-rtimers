@@ -123,5 +123,11 @@ typedef Timer<ThreadManager<HiResClock, VarBoundStats>,
   }   // namespace posix
 }   // namespace rtimers
 
+#define RTIMERS_POSIX_STATIC_SCOPED(name) \
+  static rtimers::posix::DefaultTimer _rtimers_tmr_psx(name); \
+  rtimers::posix::DefaultTimer::Scoper _rtimers_scp_psx = _rtimers_tmr_psx.scopedStart();
+#ifndef RTIMERS_STATIC_SCOPED
+#  define RTIMERS_STATIC_SCOPED(name) RTIMERS_POSIX_STATIC_SCOPED(name)
+#endif
 
 #endif  /* !_RTIMERS_POSIX_HPP */

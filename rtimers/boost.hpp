@@ -100,4 +100,11 @@ typedef Timer<ThreadManager<HiResClock, VarBoundStats>,
   }   // namespace boostpt
 }   // namespace rtimers
 
+#define RTIMERS_BOOST_STATIC_SCOPED(name) \
+  static rtimers::boostpt::DefaultTimer _rtimers_tmr_bpt(name); \
+  rtimers::boostpt::DefaultTimer::Scoper _rtimers_scp_bpt = _rtimers_tmr_bpt.scopedStart();
+#ifndef RTIMERS_STATIC_SCOPED
+#  define RTIMERS_STATIC_SCOPED(name) RTIMERS_BOOST_STATIC_SCOPED(name)
+#endif
+
 #endif  /* !_RTIMERS_BOOST_HPP */

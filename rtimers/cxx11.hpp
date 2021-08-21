@@ -108,4 +108,11 @@ using ThreadedTimer = Timer<ThreadManager<HiResClock, VarBoundStats>,
   }   // namespace cxx11
 }   // namespace rtimers
 
+#define RTIMERS_CXX11_STATIC_SCOPED(name) \
+  static rtimers::cxx11::DefaultTimer _rtimers_tmr_11(name); \
+  auto _rtimers_scp_11 = _rtimers_tmr_11.scopedStart();
+#ifndef RTIMERS_STATIC_SCOPED
+#  define RTIMERS_STATIC_SCOPED(name) RTIMERS_CXX11_STATIC_SCOPED(name)
+#endif
+
 #endif  /* !_RTIMERS_CXX11_HPP */

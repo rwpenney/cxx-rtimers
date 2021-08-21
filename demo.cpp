@@ -29,6 +29,18 @@ double expensiveFunction() {
 }
 
 
+unsigned cheapFunction() {
+  RTIMERS_STATIC_SCOPED("cheap")
+  unsigned result = 17;
+
+  for (int i=0; i<20; ++i) {
+    result = (result * 19 + 37);
+  }
+
+  return result;
+}
+
+
 int main(int argc, char* argv[])
 {
   // Estimate zero-offset on available clocks
@@ -47,8 +59,12 @@ int main(int argc, char* argv[])
       << std::endl;
 
 
-  for (int i=0; i<731; ++i) {
+  for (int i=0; i<733; ++i) {
     expensiveFunction();
+  }
+
+  for (int i=0; i<631; ++i) {
+    cheapFunction();
   }
 
   { cxx11::DefaultTimer tmr("bare");
