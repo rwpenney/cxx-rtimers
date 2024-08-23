@@ -72,7 +72,7 @@ void pushSineSamples(STATS& stats, unsigned count, double offset, double amp)
 struct TestVarianceStats : BoostUT::test_suite
 {
   TestVarianceStats()
-    : BoostUT::test_suite("resursive mean/variance computation")
+    : BoostUT::test_suite("recursive mean/variance computation")
   {
     add(BOOST_TEST_CASE(simple));
     add(BOOST_TEST_CASE(sine));
@@ -118,6 +118,51 @@ struct TestVarianceStats : BoostUT::test_suite
 };
 
 
+struct TestLogVarianceStats : BoostUT::test_suite
+{
+  TestLogVarianceStats()
+    : BoostUT::test_suite("geometric mean computation")
+  {
+    add(BOOST_TEST_CASE(simple));
+    add(BOOST_TEST_CASE(threshold));
+  }
+
+  static void simple() {
+    LogBoundStats stats;
+    const double eps = 1e-9;
+
+    stats.addSample(1e-8);
+    stats.addSample(1e-7);
+    stats.addSample(1e-6);
+    stats.addSample(1e-5);
+    stats.addSample(1e-4);
+
+    BOOST_CHECK_EQUAL(stats.count, 5);
+    BOOST_CHECK_EQUAL(stats.tmin, 1e-8);
+    BOOST_CHECK_EQUAL(stats.tmax, 1e-4);
+
+    BOOST_CHECK_CLOSE(stats.getGeometricMean(), 1e-6, eps);
+    BOOST_CHECK_CLOSE(stats.getLog10stddev(), std::sqrt(2), eps);
+  }
+
+  static void threshold() {
+    LogBoundStats stats;
+    const double eps = 1e-9;
+
+    stats.addSample(0);
+    stats.addSample(1e-9);
+    stats.addSample(1e-8);
+
+    BOOST_CHECK_EQUAL(stats.count, 3);
+    BOOST_CHECK_EQUAL(stats.tmin, 0.0);
+    BOOST_CHECK_EQUAL(stats.tmax, 1e-8);
+
+    BOOST_CHECK_CLOSE(stats.getGeometricMean(), 1e-9, eps);
+    BOOST_CHECK_CLOSE(stats.getLog10stddev(), std::sqrt(2.0/3.0), eps);
+  }
+};
+
+
 struct RTtestSuite : BoostUT::test_suite
 {
   RTtestSuite()
@@ -125,6 +170,7 @@ struct RTtestSuite : BoostUT::test_suite
   {
     add(new TestStartStop);
     add(new TestVarianceStats);
+    add(new TestLogVarianceStats);
 
     add(new TestBoost);
     add(new TestCxx11);

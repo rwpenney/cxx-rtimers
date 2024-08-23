@@ -309,6 +309,46 @@ inline std::ostream& operator<<(std::ostream& os,
 }
 
 
+/** Accumulate min/max, geometric mean and log-stddev of time-intervals */
+struct LogBoundStats : public BoundStats
+{
+  LogBoundStats()
+    : logMean(0.0), nLogVariance(0.0) {}
+
+  void addSample(double dt) {
+    BoundStats::addSample(dt);
+
+    const double delta = std::log(std::max(dt, tinyTime)) - logMean;
+    logMean += delta / count;
+    nLogVariance += ((count - 1) * delta) * delta / count;
+  }
+
+  double getGeometricMean() const {
+    return std::exp(logMean);
+  }
+
+  /** Compute (dimensionless) standard-deviation of log10(dt) */
+  double getLog10stddev() const {
+    return (count > 0 ? std::sqrt(nLogVariance / count) / std::log(10.0) : 100);
+  }
+
+  double logMean;
+  double nLogVariance;
+  static constexpr double tinyTime = 1e-10; // Smallest sensible time, to avoid log(0)
+};
+
+inline std::ostream& operator<<(std::ostream& os,
+                                const LogBoundStats& stats) {
+  const double geoMean = stats.getGeometricMean();
+  const TimeUnit tu = stats.guessUnit(geoMean);
+
+  os << "<t> = " << (geoMean * tu.mult) << tu.unit << ", "
+     << "log10_std = " << stats.getLog10stddev() << ", "
+     << static_cast<BoundStats>(stats);
+  return os;
+}
+
+
 /** Timer-statistics reporter which emits no output */
 struct NullLogger
 {

@@ -3,8 +3,11 @@ DoxyDocs/*
 CMakeCache.txt
 CMakeFiles/*
 cmake*.cmake
+CTestTestfile.cmake
+install_manifest.txt
 Makefile
 Testing/*
 
 demo
+rtimer-demo.log
 timer_tests

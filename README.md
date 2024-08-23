@@ -34,7 +34,7 @@ of the following form to std:cerr
 ```
 Timer(expensive): <t> = 8.867us, std = 3.463us, 4.263us <= t <= 57.62us (n=731)
 ```
-which shows the average time spent within expensiveFunction(),
+which shows the average time spent within `expensiveFunction()`,
 its standard deviation, the upper and lower bounds,
 and the total number of calls.
 
@@ -69,4 +69,5 @@ RTIMERS_STATIC_SCOPED(name)
 
 More specialized timers can be built by combining components
 such as `rtimers::cxx11::HiResClock`, `rtimers::SerialManager`,
-`rtimers::MeanBoundStats`, `rtimers::StreamLogger`, etc.
+`rtimers::MeanBoundStats`, `rtimers::LogBoundStats`,
+`rtimers::StreamLogger`, etc.
