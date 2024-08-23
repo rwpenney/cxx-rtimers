@@ -2,7 +2,7 @@
  *  Unit-tests for run-time timer mechanisms
  */
 
-//  (C)Copyright 2017-2021, RW Penney
+//  (C)Copyright 2017-2024, RW Penney
 
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this

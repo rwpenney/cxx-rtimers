@@ -3,7 +3,9 @@
  *    https://github.com/rwpenney/cxx-rtimers/tree/master/rtimers
  *  NOTE: this application requires a compiler with C++11 support (or later)
  */
+
 #include <cmath>
+#include <fstream>
 #include <iomanip>
 #include <rtimers/cxx11.hpp>
 #if RTIMERS_HAVE_BOOST
@@ -14,6 +16,11 @@
 #endif
 
 using namespace rtimers;
+
+
+// Optional output stream setup if using StreamLogger:
+std::ofstream log_strm;
+std::ostream& StreamLogger::stream = log_strm;
 
 
 double expensiveFunction() {
@@ -84,6 +91,16 @@ int main(int argc, char* argv[])
   }
 
   { NullTimer tmr("null");
+
+    for (int i=0; i<1000; ++i) {
+      tmr.start();
+      tmr.stop();
+    }
+  }
+
+  { Timer<SerialManager<cxx11::HiResClock, MeanBoundStats>, StreamLogger> tmr("logger");
+
+    log_strm.open("rtimer-demo.log");
 
     for (int i=0; i<1000; ++i) {
       tmr.start();
