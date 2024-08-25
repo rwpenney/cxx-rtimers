@@ -70,4 +70,5 @@ RTIMERS_STATIC_SCOPED(name)
 More specialized timers can be built by combining components
 such as `rtimers::cxx11::HiResClock`, `rtimers::SerialManager`,
 `rtimers::MeanBoundStats`, `rtimers::LogBoundStats`,
-`rtimers::StreamLogger`, etc.
+`rtimers::StreamLogger`, etc. as illustrated in the
+supplied [demo.cpp](demo.cpp).

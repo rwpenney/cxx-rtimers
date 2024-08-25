@@ -7,6 +7,7 @@
 #include <cmath>
 #include <fstream>
 #include <iomanip>
+#include <memory>
 #include <rtimers/cxx11.hpp>
 #if RTIMERS_HAVE_BOOST
 #  include <rtimers/boost.hpp>
@@ -19,8 +20,7 @@ using namespace rtimers;
 
 
 // Optional output stream setup if using StreamLogger:
-std::ofstream log_strm;
-std::ostream& StreamLogger::stream = log_strm;
+StreamLogger::StreamPtr StreamLogger::stream = nullptr;
 
 
 double expensiveFunction() {
@@ -99,8 +99,11 @@ int main(int argc, char* argv[])
   }
 
   { Timer<SerialManager<cxx11::HiResClock, MeanBoundStats>, StreamLogger> tmr("logger");
-
-    log_strm.open("rtimer-demo.log");
+#if __cplusplus >= 201700
+    StreamLogger::setStream(std::make_shared<std::ofstream>("rtimers-demo.log"));
+#else
+    StreamLogger::setStream(StreamLogger::StreamPtr(new std::ofstream("rtimers-demo.log")));
+#endif
 
     for (int i=0; i<1000; ++i) {
       tmr.start();

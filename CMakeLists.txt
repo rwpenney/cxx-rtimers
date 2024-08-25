@@ -1,7 +1,7 @@
 # CMake control-file for run-time timer classes
 # RW Penney, December 2017
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(rtimers)
 ENABLE_TESTING()
 
@@ -40,6 +40,8 @@ INSTALL(FILES ${lib_hdrs} DESTINATION include/rtimers)
 
 ADD_EXECUTABLE(demo ${lib_hdrs} demo.cpp)
 TARGET_LINK_LIBRARIES(demo ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+SET_TARGET_PROPERTIES(demo
+    PROPERTIES ADDITIONAL_CLEAN_FILES "rtimers-demo.log")
 
 
 IF(Boost_FOUND)

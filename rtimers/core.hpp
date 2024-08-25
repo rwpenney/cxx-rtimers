@@ -14,6 +14,9 @@
 #include <cmath>
 #include <ctime>
 #include <iostream>
+#if __cplusplus >= 201100
+#  include <memory>
+#endif
 
 
 namespace rtimers {
@@ -369,21 +372,38 @@ struct StderrLogger
 
 /** Timer-statistics reporter sending reports to single output stream
  *
- *  Client code will need to define a static field specifying the output stream, e.g.
+ *  Client code will need to define a static field for storing a pointer
+ *  to the output stream, e.g.
  *  \code
- *  std::ostream& StreamLogger::stream = std::cout;
+ *  StreamLogger::StreamPtr StreamLogger::stream = nullptr;
+ *  \endcode
+ *  and then call the setStream() method, e.g.
+ *  \code
+ *  StreamLogger::setStream(std::make_shared<std::ostream>("some-file.log"));
  *  \endcode
  */
 class StreamLogger
 {
   public:
+#if __cplusplus >= 201100
+    typedef typename std::shared_ptr<std::ostream> StreamPtr;
+#else
+    typedef typename std::ostream* StreamPtr;
+#endif
+
     template <typename STATS>
     static void report(const std::string& ident, const STATS& stats) {
-      stream << "Timer(" << ident << "): " << stats << std::endl;
+      if (stream) {
+        (*stream) << "Timer(" << ident << "): " << stats << std::endl;
+      }
+    }
+
+    static void setStream(StreamPtr strm) {
+      stream = strm;
     }
 
   protected:
-    static std::ostream& stream;
+    static StreamPtr stream;
 };
 
 
